@@ -1,0 +1,123 @@
+import java.util.EmptyStackException;
+
+// Stack implementation using arrays
+class StackArray {
+    private int maxSize;
+    private int[] stackArray;
+    private int top;
+
+    public StackArray(int size) {
+        this.maxSize = size;
+        this.stackArray = new int[maxSize];
+        this.top = -1;
+    }
+
+    public void push(int value) {
+        if (isFull()) {
+            System.out.println("Stack is full. Cannot push element " + value);
+            return;
+        }
+        stackArray[++top] = value;
+    }
+
+    public int pop() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return stackArray[top--];
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return stackArray[top];
+    }
+
+    public boolean isEmpty() {
+        return (top == -1);
+    }
+
+    public boolean isFull() {
+        return (top == maxSize - 1);
+    }
+}
+
+// Queue implementation using linked list
+class QueueLinkedList {
+    private class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    private Node front;
+    private Node rear;
+
+    public QueueLinkedList() {
+        this.front = null;
+        this.rear = null;
+    }
+
+    public void enqueue(int value) {
+        Node newNode = new Node(value);
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode;
+        } else {
+            rear.next = newNode;
+            rear = newNode;
+        }
+    }
+
+    public int dequeue() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        int data = front.data;
+        front = front.next;
+        if (front == null) {
+            rear = null;
+        }
+        return data;
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return front.data;
+    }
+
+    public boolean isEmpty() {
+        return (front == null);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Stack demonstration
+        System.out.println("Stack implementation using arrays:");
+        StackArray stack = new StackArray(5);
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println("Peek: " + stack.peek()); // Should print 3
+        System.out.println("Pop: " + stack.pop()); // Should print 3
+        System.out.println("Peek: " + stack.peek()); // Should print 2
+
+        // Queue demonstration
+        System.out.println("\nQueue implementation using linked list:");
+        QueueLinkedList queue = new QueueLinkedList();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+        System.out.println("Peek: " + queue.peek()); // Should print 1
+        System.out.println("Dequeue: " + queue.dequeue()); // Should print 1
+        System.out.println("Peek: " + queue.peek()); // Should print 2
+    }
+}

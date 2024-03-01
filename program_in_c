@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// Stack implementation using arrays
+#define MAX_STACK_SIZE 5
+
+typedef struct {
+int stackArray[MAX_STACK_SIZE];
+int top;
+} StackArray;
+
+void initializeStack(StackArray *stack) {
+stack->top = -1;
+}
+
+bool isStackEmpty(StackArray *stack) {
+return (stack->top == -1);
+}
+
+bool isStackFull(StackArray *stack) {
+return (stack->top == MAX_STACK_SIZE - 1);
+}
+
+void push(StackArray *stack, int value) {
+if (isStackFull(stack)) {
+printf("Stack is full. Cannot push element %d\n", value);
+return;
+}
+stack->stackArray[++(stack->top)] = value;
+}
+
+int pop(StackArray *stack) {
+if (isStackEmpty(stack)) {
+printf("Stack is empty\n");
+exit(EXIT_FAILURE);
+}
+return stack->stackArray[(stack->top)--];
+}
+
+int peek(StackArray *stack) {
+if (isStackEmpty(stack)) {
+printf("Stack is empty\n");
+exit(EXIT_FAILURE);
+}
+return stack->stackArray[stack->top];
+}
+
+// Queue  using linked list
+typedef struct Node {
+int data;
+struct Node* next;
+} Node;
+
+typedef struct {
+Node* front;
+Node* rear;
+} QueueLinkedList;
+
+void initializeQueue(QueueLinkedList *queue) {
+queue->front = queue->rear = NULL;
+}
+
+bool isQueueEmpty(QueueLinkedList *queue) {
+return (queue->front == NULL);
+}
+
+void enqueue(QueueLinkedList *queue, int value) {
+Node* newNode = (Node*)malloc(sizeof(Node));
+if (newNode == NULL) {
+printf("Memory allocation failed\n");
+exit(EXIT_FAILURE);
+}
+newNode->data = value;
+newNode->next = NULL;
+if (isQueueEmpty(queue)) {
+queue->front = queue->rear = newNode;
+} else {
+queue->rear->next = newNode;
+queue->rear = newNode;
+}
+}
+
+int dequeue(QueueLinkedList *queue) {
+if (isQueueEmpty(queue)) {
+printf("Queue is empty\n");
+exit(EXIT_FAILURE);
+}
+Node* temp = queue->front;
+int data = temp->data;
+queue->front = queue->front->next;
+if (queue->front == NULL) {
+queue->rear = NULL;
+}
+free(temp);
+return data;
+}
+
+int peekQueue(QueueLinkedList *queue) {
+if (isQueueEmpty(queue)) {
+printf("Queue is empty\n");
+ftexit(EXIT_FAILURE);
+}
+return queue->front->data;
+}
+
+int main() {
+// Stack
+printf("Stack implementation using arrays:\n");
+StackArray stack;initializeStack(&stack);
+push(&stack, 1);
+push(&stack, 2);
+push(&stack, 3);
+printf("Peek: %d\n", peek(&stack)); // Should print 3
+printf("Pop: %d\n", pop(&stack));   // Should print 3
+printf("Peek: %d\n", peek(&stack)); // Should print 2
+
+// Queue
+printf("\nQueue implementation using linked list:\n");
+QueueLinkedList queue;
+initializeQueue(&queue);
+enqueue(&queue, 1);
+enqueue(&queue, 2);
+enqueue(&queue, 3);printf("Peek: %d\n", peekQueue(&queue)); // Should print 1
+printf("Dequeue: %d\n", dequeue(&queue)); // Should print 1
+printf("Peek: %d\n", peekQueue(&queue)); // Should print 2
+return 0;
+}
